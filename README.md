@@ -18,7 +18,7 @@ Diskkord.builder(JDABuilder.createDefault(token))
 - **Text commands** with aliases
 - **Buttons, select menus and modals** routed by custom ID, with arguments carried in the ID
 - **Annotation scanning** or manual registration
-- **Guild commands** for instant updates while developing
+- **Guild commands** for instant updates while developing 
 
 ## 📋 Requirements
 
