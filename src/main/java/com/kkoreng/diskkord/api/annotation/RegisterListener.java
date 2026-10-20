@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marks a class to be registered automatically by {@link com.kkoreng.diskkord.Diskkord#scan(String)}.
+ * Marks a class to be registered automatically by {@link com.kkoreng.diskkord.DiskkordBuilder#scan(String)}.
  * <p>
  * Use this for anything that reacts when something happens:
  * <ul>
@@ -17,8 +17,8 @@ import java.lang.annotation.Target;
  *     <li>{@link net.dv8tion.jda.api.hooks.EventListener}, including {@link net.dv8tion.jda.api.hooks.ListenerAdapter}</li>
  * </ul>
  * The class must be concrete, top-level or static nested, and have a no-args constructor.
- * Classes that need constructor arguments should be registered manually with
- * {@link com.kkoreng.diskkord.Diskkord#register} instead.
+ * Classes that need constructor arguments should be created by the caller and registered with
+ * {@link com.kkoreng.diskkord.DiskkordBuilder#register} instead.
  *
  * @see RegisterCommand
  */

@@ -11,7 +11,7 @@ public class StringSelectInteractionDispatcher extends ListenerAdapter {
     private final StringSelectInteractionRegistry registry;
 
     public StringSelectInteractionDispatcher(StringSelectInteractionRegistry registry) {
-            this.registry = registry;
+        this.registry = registry;
     }
 
     @Override

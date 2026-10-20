@@ -17,7 +17,7 @@ public abstract class AbstractRegistry<K, V> {
         K normalized = normalizeKey(key);
 
         if (entries.putIfAbsent(normalized, value) != null) {
-            throw new IllegalStateException("IllegalStateException, key: " + key);
+            throw new IllegalStateException("Duplicate key: " + key);
         }
     }
 

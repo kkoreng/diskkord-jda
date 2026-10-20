@@ -1,5 +1,5 @@
 plugins {
-    id("java")
+    `java-library`
 }
 
 group = "com.kkoreng.diskkord"
@@ -14,8 +14,8 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-    // JDA
-    implementation(libs.jda)
+    // JDA types are part of the public API, so users get JDA transitively.
+    api(libs.jda)
 
     // Lombok
     compileOnly(libs.lombok)
@@ -24,13 +24,8 @@ dependencies {
     // Classpath
     implementation(libs.classgraph)
 
-    // Config
-    implementation(libs.dotenv)
-    implementation(libs.snakeyaml)
-
-    // Logging
+    // Logging: API only. The logging backend is chosen by the user.
     implementation(libs.slf4j)
-    runtimeOnly(libs.logback)
 }
 
 tasks.test {
