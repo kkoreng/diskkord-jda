@@ -31,10 +31,11 @@ Diskkord.builder(JDABuilder.createDefault(token))
 
 ```kotlin
 dependencies {
-    implementation("com.kkoreng:diskkord:0.1.0")
+    implementation("com.kkoreng:diskkord:{version}")
 }
 ```
 
+Replace `{version}` with the latest version shown in the badge above.
 JDA comes with Diskkord, so you don't need to add it separately.
 Add a logging backend such as `logback-classic` if you want to see logs.
 
