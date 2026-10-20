@@ -1,5 +1,7 @@
 # Diskkord
 
+[![Maven Central](https://img.shields.io/maven-central/v/com.kkoreng/diskkord)](https://central.sonatype.com/artifact/com.kkoreng/diskkord)
+
 A lightweight framework for [JDA](https://github.com/discord-jda/JDA) that takes care of registering
 commands, listeners and interactions, so your bot code only describes what each one does.
 
@@ -31,16 +33,6 @@ Diskkord.builder(JDABuilder.createDefault(token))
 dependencies {
     implementation("com.kkoreng:diskkord:0.1.0")
 }
-```
-
-**Maven**
-
-```xml
-<dependency>
-    <groupId>com.kkoreng</groupId>
-    <artifactId>diskkord</artifactId>
-    <version>0.1.0</version>
-</dependency>
 ```
 
 JDA comes with Diskkord, so you don't need to add it separately.
