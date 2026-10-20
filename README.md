@@ -18,7 +18,8 @@ Diskkord.builder(JDABuilder.createDefault(token))
 - **Text commands** with aliases
 - **Buttons, select menus and modals** routed by custom ID, with arguments carried in the ID
 - **Annotation scanning** or manual registration
-- **Guild commands** for instant updates while developing 
+- **Sharding** with `DefaultShardManagerBuilder`
+- **Guild commands** for instant updates while developing ca
 
 ## 📋 Requirements
 
@@ -286,6 +287,28 @@ Diskkord.builder(jda)
 
 Without `guilds(...)`, commands are registered globally.
 
+## 🧩 Sharding
+
+Pass a `DefaultShardManagerBuilder` instead of a `JDABuilder`. Every shard gets the same commands,
+handlers and listeners.
+
+```java
+Diskkord diskkord = Diskkord.builder(DefaultShardManagerBuilder.createDefault(token))
+        .scan("com.example.bot")
+        .build();
+
+ShardManager shardManager = diskkord.getShardManager();
+```
+
+Use `getShardManager()` instead of `getJDA()` when the bot is sharded.
+
+- Global commands are registered by shard 0, and guild commands by the shard that owns each server.
+  If you split shards across processes with `setShards(...)`, make sure one process runs shard 0
+  and that every process runs the same version of your code.
+- Shards handle events on their own threads, so one command or handler instance can run on several
+  threads at once. Keep mutable state thread-safe, for example with `AtomicInteger` or
+  `ConcurrentHashMap`.
+
 ## ⚠️ Known limitations
 
 - Diskkord replaces the bot's application commands on startup, so commands registered elsewhere
@@ -294,7 +317,7 @@ Without `guilds(...)`, commands are registered globally.
   servers until removed.
 - Text commands have no prefix setting or argument parsing yet.
 - Exceptions thrown by handlers are logged by JDA; there is no error hook yet.
-- `ShardManager` and `AnnotatedEventManager` are not supported.
+- `AnnotatedEventManager` is not supported.
 
 ## 🤝 Contributing
 

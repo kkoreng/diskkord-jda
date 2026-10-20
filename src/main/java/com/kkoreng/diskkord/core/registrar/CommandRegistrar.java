@@ -64,22 +64,37 @@ public final class CommandRegistrar {
     /**
      * Registers every slash and context menu command with Discord, either globally or in each
      * configured server. Must run after JDA is ready, since server commands need the server cache.
+     * <p>
+     * With sharding this runs once per shard. Global commands belong to the application, so only
+     * shard 0 updates them, and each shard only updates the servers it owns.
      */
     public void sync(JDA jda) {
+        JDA.ShardInfo shard = jda.getShardInfo();
+        boolean primary = shard.getShardId() == 0;
+
         List<CommandData> data = new ArrayList<>();
         data.addAll(slashCommands.getAllData());
         data.addAll(messageContextCommands.getAllData());
         data.addAll(userContextCommands.getAllData());
 
         if (guildIds.isEmpty()) {
-            jda.updateCommands().addCommands(data).queue();
+            if (primary) {
+                jda.updateCommands().addCommands(data).queue();
+            }
             return;
         }
 
         // Clear global commands so servers do not show both the old global and the new server version.
-        jda.updateCommands().queue();
+        if (primary) {
+            jda.updateCommands().queue();
+        }
 
         for (long guildId : guildIds) {
+            // Discord assigns a server to shard (guildId >> 22) % shardTotal.
+            if ((guildId >> 22) % shard.getShardTotal() != shard.getShardId()) {
+                continue;
+            }
+
             Guild guild = jda.getGuildById(guildId);
 
             if (guild == null) {

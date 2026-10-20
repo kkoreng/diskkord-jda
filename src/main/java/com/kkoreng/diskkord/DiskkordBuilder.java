@@ -21,9 +21,9 @@ import com.kkoreng.diskkord.core.registrar.CommandRegistrar;
 import com.kkoreng.diskkord.core.registrar.CommandSyncListener;
 import com.kkoreng.diskkord.core.registrar.InteractionRegistrar;
 import com.kkoreng.diskkord.core.registrar.ListenerRegistrar;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.hooks.EventListener;
+import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -47,6 +47,7 @@ import java.util.Set;
 public final class DiskkordBuilder {
 
     private final JDABuilder jdaBuilder;
+    private final DefaultShardManagerBuilder shardManagerBuilder;
 
     private final CommandRegistrar commands = new CommandRegistrar();
     private final InteractionRegistrar interactions = new InteractionRegistrar();
@@ -58,6 +59,12 @@ public final class DiskkordBuilder {
 
     DiskkordBuilder(JDABuilder jdaBuilder) {
         this.jdaBuilder = Objects.requireNonNull(jdaBuilder);
+        this.shardManagerBuilder = null;
+    }
+
+    DiskkordBuilder(DefaultShardManagerBuilder shardManagerBuilder) {
+        this.jdaBuilder = null;
+        this.shardManagerBuilder = Objects.requireNonNull(shardManagerBuilder);
     }
 
     /**
@@ -202,7 +209,7 @@ public final class DiskkordBuilder {
     }
 
     /**
-     * Creates scanned classes, installs listeners and builds JDA.
+     * Creates scanned classes, installs listeners and builds JDA or the shard manager.
      * Application commands are synchronized with Discord once JDA is ready.
      * The builder cannot be used after this call.
      *
@@ -228,11 +235,13 @@ public final class DiskkordBuilder {
                 new EntitySelectInteractionDispatcher(interactions.getEntitySelects()),
                 new CommandSyncListener(commands)
         );
-        listeners.install(jdaBuilder);
+        if (jdaBuilder != null) {
+            listeners.install(jdaBuilder);
+            return new Diskkord(jdaBuilder.build());
+        }
 
-        JDA jda = jdaBuilder.build();
-
-        return new Diskkord(jda);
+        listeners.install(shardManagerBuilder);
+        return new Diskkord(shardManagerBuilder.build());
     }
 
     private void registerScanned(Object component) {
